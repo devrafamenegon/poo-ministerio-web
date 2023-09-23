@@ -1,22 +1,166 @@
 <template>
-  <div>
+  <div class="ministerios-wrapper">
     <h1>Ministérios</h1>
-    <MinisterioTable :ministerios="ministerios"></MinisterioTable>
+    <MinisteriosTable :ministerios="ministerios"></MinisteriosTable>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import MinisterioTable from '@/components/MinisterioTable.vue';
+import MinisteriosTable from '@/components/MinisteriosTable.vue';
 
 export default defineComponent({
-  name: 'MinisterioView',
+  name: 'MinisteriosView',
   components: {
-    MinisterioTable,
+    MinisteriosTable,
   },
   data() {
     return {
       ministerios: [
+        {
+          id: 1000,
+          nome: 'Ministério da SaúdeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAA',
+          numFuncionarios: 5000000,
+          verba: 100000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
+        {
+          id: 1,
+          nome: 'Ministério da Saúde',
+          numFuncionarios: 500,
+          verba: 1000000,
+        },
+        {
+          id: 2,
+          nome: 'Ministério da Educação',
+          numFuncionarios: 300,
+          verba: 800000,
+        },
         {
           id: 1,
           nome: 'Ministério da Saúde',
@@ -36,26 +180,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Estilize a tabela e os botões de acordo com o seu design */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-button {
-  padding: 5px 10px;
-  margin-right: 5px;
-  cursor: pointer;
-}
+  
 </style>
