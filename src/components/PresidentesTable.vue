@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Ministérios</h2>
+    <h2>Presidentes</h2>
     <table>
       <thead>
         <tr>
@@ -12,14 +12,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="ministerio in ministerios" :key="ministerio.id">
-          <td>{{ ministerio.id }}</td>
-          <td>{{ ministerio.nome }}</td>
-          <td>{{ ministerio.numFuncionarios }}</td>
-          <td>{{ ministerio.verba }}</td>
+        <tr v-for="presidente in presidentes" :key="presidente.id">
+          <td>{{ presidente.id }}</td>
+          <td>{{ presidente.nome }}</td>
+          <td>{{ presidente.numFuncionarios }}</td>
+          <td>{{ presidente.verba }}</td>
           <td>
-            <button @click="editarMinisterio(ministerio)">Editar</button>
-            <button @click="excluirMinisterio(ministerio)">Excluir</button>
+            <button @click="editarPresidente(presidente)">Editar</button>
+            <button @click="excluirPresidente(presidente)">Excluir</button>
           </td>
         </tr>
       </tbody>
@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-interface Ministerio {
+interface Presidente {
   id: number;
   nome: string;
   numFuncionarios: number;
@@ -38,20 +38,20 @@ interface Ministerio {
 }
 
 export default defineComponent({
-  name: 'MinisterioTable',
+  name: 'PresidentesTable',
   props: {
-    ministerios: {
-      type: Array as () => Ministerio[],
+    presidentes: {
+      type: Array as () => Presidente[],
       required: true,
     },
   },
   methods: {
-    editarMinisterio(ministerio: Ministerio): void {
+    editarPresidente(presidente: Presidente): void {
       // Implemente a lógica para editar o ministério aqui
       // Você pode abrir um formulário de edição preenchido com os dados do ministério
     },
 
-    excluirMinisterio(ministerio: Ministerio): void {
+    excluirPresidente(presidente: Presidente): void {
       // Implemente a lógica para excluir o ministério aqui
       // Envie uma solicitação para o endpoint de exclusão
     }
