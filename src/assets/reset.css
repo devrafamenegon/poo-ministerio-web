@@ -1,0 +1,56 @@
+/* reset.css */
+/* CSS Reset by Eric Meyer (http://meyerweb.com/eric/tools/css/reset/) */
+/* v2.0 | 20110126
+   License: none (public domain)
+*/
+
+/* 1. Reset de margens e preenchimentos para elementos */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* 2. Tornar elementos do tipo "block" comportarem-se como blocos */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* 3. Redefinir estilos padrão de links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 4. Tornar elementos do tipo "block" comuns mais semânticos */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+/* 5. Estilos padrão para elementos do tipo "body" */
+body {
+  line-height: 1;
+}
+
+/* 6. Ajustes tipográficos para elementos do tipo "blockquote" */
+blockquote {
+  quotes: none;
+  padding: 0;
+  margin: 0;
+}
+
+blockquote:before, blockquote:after {
+  content: '';
+  content: none;
+}
+
+/* 7. Ajustes tipográficos para elementos do tipo "table" */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
