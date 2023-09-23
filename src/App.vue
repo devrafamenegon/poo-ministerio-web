@@ -1,32 +1,45 @@
 <template>
-  <header>
-    <div class="wrapper">
-      <nav class="navbar">
-        <RouterLink to="/ministerios">Ministérios</RouterLink>
-        <RouterLink to="/secretarias">Secretarías</RouterLink>
-        <RouterLink to="/ministros">Ministros</RouterLink>
-        <RouterLink to="/presidentes">Presidentes</RouterLink>
-      </nav>
-    </div>
-  </header>
+  <div class="wrapper">
+    <nav class="navbar">
+      <RouterLink to="/ministerios">Ministérios</RouterLink>
+      <RouterLink to="/secretarias">Secretarías</RouterLink>
+      <RouterLink to="/ministros">Ministros</RouterLink>
+      <RouterLink to="/presidentes">Presidentes</RouterLink>
+    </nav>
+  </div>
 
-  <RouterView />
+  <RouterView class="body-wrapper"/>
 </template>
 
 <style scoped>
+.wrapper {
+  width: 100vw;
+  background-color: #333;
+}
 .navbar {
-  background-color: #333; /* Cor de fundo */
-  padding: 10px 0; /* Espaçamento interno */
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #333;
+  padding: 0 20%;
+  margin: 0;
 }
 
 .navbar a {
-  color: #fff; /* Cor do texto */
-  text-decoration: none; /* Remover sublinhado nos links */
-  margin-right: 20px; /* Espaçamento entre os links */
-  font-size: 18px; /* Tamanho da fonte */
+  color: #fff; 
+  text-decoration: none;
+  margin-right: 20px;
+  font-size: 18px;
 }
 
 .navbar a:hover {
-  text-decoration: underline; /* Sublinhar os links no hover */
+  text-decoration: underline;
+}
+
+.body-wrapper {
+  padding: 2% 20%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
