@@ -1,184 +1,43 @@
 <template>
   <div class="ministerios-wrapper">
     <h1>Ministérios</h1>
-    <MinisteriosTable :ministerios="ministerios"></MinisteriosTable>
+    <MinisteriosTable v-if="!isLoading" :ministerios="ministerios"></MinisteriosTable>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MinisteriosTable from '@/components/MinisteriosTable.vue';
+import { api, enpointMinisterios } from '@/services/config/httpClient';
 
 export default defineComponent({
   name: 'MinisteriosView',
   components: {
     MinisteriosTable,
   },
-  data() {
-    return {
-      ministerios: [
-        {
-          id: 1000,
-          nome: 'Ministério da SaúdeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAA',
-          numFuncionarios: 5000000,
-          verba: 100000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-      ],
-    };
+  setup() {
+    const ministerios = ref([]);
+    const isLoading = ref(true);
+
+    api.get(enpointMinisterios)
+      .then(response => {
+        ministerios.value = response.data.data;
+        isLoading.value = false;
+      })
+      .catch(error => {
+        console.error('Erro ao buscar ministérios:', error);
+        isLoading.value = false;
+      });
+
+    return { ministerios, isLoading };
   },
 });
+
 </script>
 
 <style scoped>
-  
+  .ministerios-wrapper > h1 {
+    font-weight: 600;
+    font-size: 24px;
+  }
 </style>
