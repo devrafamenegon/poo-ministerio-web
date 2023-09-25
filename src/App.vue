@@ -38,8 +38,8 @@
 }
 
 .body-wrapper {
-  padding: 2% 20%;
   display: flex;
   flex-direction: column;
+  padding: 2% 20%;
 }
 </style>
