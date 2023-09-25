@@ -48,7 +48,6 @@
     >Excluir</button>
   </div>
 
-  <!-- Formulário de Edição -->
   <div class="form-container" v-if="ministerioSelecionado">
     <h2>Editar Ministério</h2>
     <form @submit.prevent="salvarEdicao">
@@ -65,8 +64,8 @@
         <input type="number" id="verba" v-model="ministerioSelecionado.verba" />
       </div>
       <div class="form-actions">
-        <button type="submit">Salvar</button>
-        <button @click="cancelarEdicao">Cancelar</button>
+        <button id="form-btn-save" type="submit">Salvar</button>
+        <button id="form-btn-cancel" @click="cancelarEdicao">Cancelar</button>
       </div>
     </form>
   </div>
@@ -74,6 +73,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { api, enpointMinisterios } from '@/services/config/httpClient';
+import { TYPE, useToast } from "vue-toastification";
+
 
 interface Ministerio {
   id: number;
@@ -88,14 +90,34 @@ export default defineComponent({
     ministerios: {
       type: Array as () => Ministerio[],
       required: true,
-    },
+    }
   },
+  setup() {
+   const toast = useToast();
+   return { toast }
+ },
   data() {
     return {
       ministerioSelecionado: null as null | Ministerio, // Armazena o Ministério selecionado
     };
   },
   methods: {
+    triggerToastSuccess(msg: string) {
+      this.toast(msg, {
+        type: TYPE.SUCCESS,
+        timeout: 5000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: false,
+        closeButton: "button",
+        icon: "omg",
+        rtl: false
+      });
+    },
     editarMinisterio(): void {
       // Implemente a lógica para editar o ministério aqui
       // Verifique this.ministerioSelecionado para saber qual ministério está selecionado
@@ -107,16 +129,23 @@ export default defineComponent({
     },
 
     selecionarMinisterio(ministerio: Ministerio): void {
-      // Define o Ministério selecionado
       this.ministerioSelecionado = ministerio;
     },
 
-    salvarEdicao(): void {
+    async salvarEdicao() {
       if (this.ministerioSelecionado) {
-        // Implemente a lógica para salvar as edições aqui
-        // this.ministerioSelecionado contém os dados atualizados
+        try {
+          const response = await api.put(`${enpointMinisterios}/${this.ministerioSelecionado.id}`, this.ministerioSelecionado);
+
+          if (response.status === 200) {
+            this.triggerToastSuccess('Ministério salvo com sucesso.')
+          } else {
+            console.log('Falha ao atualizar Ministério.');
+          }
+        } catch (error) {
+          console.error('Erro ao atualizar o ministério:', error);
+        }
       }
-      // Esconde o formulário de edição
       this.ministerioSelecionado = null;
     },
 
@@ -124,20 +153,21 @@ export default defineComponent({
       // Esconde o formulário de edição sem salvar
       this.ministerioSelecionado = null;
     },
-  },
+  }
 });
 </script>
 
 <style scoped>
   .table-container {
-    max-height: 500px; /* Adicione uma barra de rolagem vertical quando necessário */
+    margin-top: 20px;
+    max-height: 350px; /* Adicione uma barra de rolagem vertical quando necessário */
     overflow-y: auto;
+    border: 1px solid #ccc;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
   }
 
   th, td {
@@ -194,29 +224,36 @@ export default defineComponent({
   }
 
   .form-container {
-    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 24px;
     background-color: #fff;
-    padding: 20px;
     border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
   }
 
   .form-container h2 {
-    margin-bottom: 10px;
+    font-weight: 600;
+    margin-bottom: 24px;
   }
 
   .form-group {
     margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
   }
 
   label {
-    display: block;
     margin-bottom: 5px;
   }
 
   input[type="text"],
   input[type="number"] {
-    width: 100%;
-    padding: 5px;
+    border: 1px solid #ccc;
+    padding: 3px;
   }
 
   .form-actions {
@@ -225,5 +262,13 @@ export default defineComponent({
 
   .form-actions button {
     margin-right: 10px;
+  }
+
+  #form-btn-save {
+    background-color: #49CC8E;
+  }
+
+  #form-btn-cancel {
+    background-color: #b6b6b6;
   }
 </style>
