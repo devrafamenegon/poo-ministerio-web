@@ -1,7 +1,7 @@
 <template>
   <div class="ministerios-wrapper">
     <h1>Ministérios</h1>
-    <MinisteriosTable v-if="!isLoading" :ministerios="ministerios"></MinisteriosTable>
+    <MinisteriosTable v-if="!isLoading" :ministerios="ministerios" @atualizar-lista="buscarMinisterios"></MinisteriosTable>
   </div>
 </template>
 
@@ -19,18 +19,23 @@ export default defineComponent({
     const ministerios = ref([]);
     const isLoading = ref(true);
 
-    api.get(enpointMinisterios)
-      .then(response => {
-        ministerios.value = response.data.data;
-        isLoading.value = false;
-      })
-      .catch(error => {
-        console.error('Erro ao buscar ministérios:', error);
-        isLoading.value = false;
-      });
+    const buscarMinisterios = () => {
+      api.get(enpointMinisterios)
+        .then(response => {
+          ministerios.value = response.data.data;
+          isLoading.value = false;
+        })
+        .catch(error => {
+          console.error('Erro ao buscar ministérios:', error);
+          isLoading.value = false;
+        });
+    };
 
-    return { ministerios, isLoading };
+    return { ministerios, isLoading, buscarMinisterios };
   },
+  mounted() {
+    this.buscarMinisterios()
+  }
 });
 
 </script>

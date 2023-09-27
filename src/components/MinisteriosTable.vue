@@ -19,9 +19,10 @@
           <td>
             <input
               type="radio"
-              id="radio-select"
               @change="selecionarMinisterio(ministerio)"
               :checked="ministerio === ministerioSelecionado"
+              :disabled="isCreating"
+              :class="{ 'disabled-button': isCreating }"
             />
           </td>
           <td>{{ ministerio.id }}</td>
@@ -34,22 +35,27 @@
   </div>
   <div class="btn-container">
     <button 
+      id="btn-create" 
+      @click="criarMinisterio()"
+    >Criar</button>
+
+    <button 
       id="btn-edit" 
       @click="editarMinisterio()" 
-      :class="{ 'disabled-button': !ministerioSelecionado }"
-      :disabled="!ministerioSelecionado"
+      :class="{ 'disabled-button': !ministerioSelecionado || isCreating }"
+      :disabled="!ministerioSelecionado || isCreating"
     >Editar</button>
     
     <button 
       id="btn-delete" 
       @click="excluirMinisterio()" 
-      :class="{ 'disabled-button': !ministerioSelecionado }"
-      :disabled="!ministerioSelecionado"
+      :class="{ 'disabled-button': !ministerioSelecionado || isCreating }"
+      :disabled="!ministerioSelecionado || isCreating"
     >Excluir</button>
   </div>
 
-  <div class="form-container" v-if="ministerioSelecionado">
-    <h2>Editar Ministério</h2>
+  <div class="form-container" v-if="(ministerioSelecionado !== null) && (isEditing || isCreating)">
+    <h2>{{ isCreating ? 'Criar Ministério' : 'Editar Ministério' }}</h2>
     <form @submit.prevent="salvarEdicao">
       <div class="form-group">
         <label for="nome">Nome:</label>
@@ -64,10 +70,11 @@
         <input type="number" id="verba" v-model="ministerioSelecionado.verba" />
       </div>
       <div class="form-actions">
-        <button id="form-btn-save" type="submit">Salvar</button>
+        <button id="form-btn-save" type="submit">{{ isCreating ? 'Criar' : 'Salvar' }}</button>
         <button id="form-btn-cancel" @click="cancelarEdicao">Cancelar</button>
       </div>
     </form>
+    <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
   </div>
 </template>
 
@@ -98,13 +105,16 @@ export default defineComponent({
  },
   data() {
     return {
-      ministerioSelecionado: null as null | Ministerio, // Armazena o Ministério selecionado
+      ministerioSelecionado: null as null | Ministerio,
+      isEditing: false,
+      isCreating: false,
+      errorMessage: '',
     };
   },
   methods: {
-    triggerToastSuccess(msg: string) {
+    triggerToast(msg: string, type: TYPE): void {
       this.toast(msg, {
-        type: TYPE.SUCCESS,
+        type: type,
         timeout: 5000,
         closeOnClick: true,
         pauseOnFocusLoss: true,
@@ -118,40 +128,102 @@ export default defineComponent({
         rtl: false
       });
     },
-    editarMinisterio(): void {
-      // Implemente a lógica para editar o ministério aqui
-      // Verifique this.ministerioSelecionado para saber qual ministério está selecionado
-    },
 
-    excluirMinisterio(): void {
-      // Implemente a lógica para excluir o ministério aqui
-      // Verifique this.ministerioSelecionado para saber qual ministério está selecionado
+    atualizarLista(): void {
+      // Se você estiver usando Vue 3, você pode emitir um evento para o componente pai para atualizar a lista
+      this.$emit('atualizar-lista')
     },
 
     selecionarMinisterio(ministerio: Ministerio): void {
       this.ministerioSelecionado = ministerio;
     },
 
-    async salvarEdicao() {
+    criarMinisterio(): void {
+      this.isCreating = true;
+      this.isEditing = false;
+      this.ministerioSelecionado = {} as Ministerio;
+    },
+
+    editarMinisterio(): void {
+      this.isEditing = true;
+    },
+
+    async excluirMinisterio(): Promise<void> {
       if (this.ministerioSelecionado) {
+        const ministerioId = this.ministerioSelecionado.id;
+
         try {
-          const response = await api.put(`${enpointMinisterios}/${this.ministerioSelecionado.id}`, this.ministerioSelecionado);
+          const response = await api.delete(`${enpointMinisterios}/${ministerioId}`);
 
           if (response.status === 200) {
-            this.triggerToastSuccess('Ministério salvo com sucesso.')
+            this.triggerToast('Ministério excluído com sucesso.', TYPE.SUCCESS);
           } else {
-            console.log('Falha ao atualizar Ministério.');
+            this.triggerToast('Ministério não pode ser excluído pois possui secretária(s) cadastrada(s).', TYPE.ERROR);
           }
         } catch (error) {
-          console.error('Erro ao atualizar o ministério:', error);
+          this.triggerToast('Erro inesperado.', TYPE.ERROR);
+          console.error('Erro ao excluir o Ministério:', error);
         }
       }
+
+      this.atualizarLista();
       this.ministerioSelecionado = null;
     },
 
+    async salvarEdicao(): Promise<void>  {
+      if (this.ministerioSelecionado) {
+        if (this.isCreating) {
+          try {
+            const response = await api.post(`${enpointMinisterios}`, this.ministerioSelecionado);
+
+            if (response.status === 200) {
+              this.triggerToast('Ministério criado com sucesso.', TYPE.SUCCESS);
+              this.atualizarLista();
+              this.cancelarEdicao();
+            } 
+
+            // TODO - se não é 200, cai direto no catch
+            if (response.status === 400){
+              this.errorMessage = response.data.message;
+              this.triggerToast('Ministério não pode ser criado pois possui campos inválidos.', TYPE.ERROR);
+            }
+
+          } catch (error) {
+            this.triggerToast('Erro inesperado.', TYPE.ERROR);
+            console.error('Erro ao criar o ministério:', error);
+          }
+        }       
+
+        if (this.isEditing) {
+          try {
+            const response = await api.put(`${enpointMinisterios}/${this.ministerioSelecionado.id}`, this.ministerioSelecionado);
+
+            if (response.status === 200) {
+              this.triggerToast('Ministério editado com sucesso.', TYPE.SUCCESS);
+              this.atualizarLista();
+              this.cancelarEdicao();
+            } 
+
+            // TODO - se não é 200, cai direto no catch
+            if (response.status === 400){
+              this.errorMessage = response.data.message;
+              this.triggerToast('Ministério não pode ser editado pois possui campos inválidos.', TYPE.ERROR);
+            }
+
+          } catch (error) {
+            this.triggerToast('Erro inesperado.', TYPE.ERROR);
+            console.error('Erro ao atualizar o ministério:', error);
+          }
+        }
+      }
+    },
+
     cancelarEdicao(): void {
-      // Esconde o formulário de edição sem salvar
       this.ministerioSelecionado = null;
+      this.errorMessage = '';
+      this.isEditing = false;
+      this.isCreating = false;
+      this.atualizarLista();
     },
   }
 });
@@ -160,7 +232,7 @@ export default defineComponent({
 <style scoped>
   .table-container {
     margin-top: 20px;
-    max-height: 350px; /* Adicione uma barra de rolagem vertical quando necessário */
+    max-height: 350px;
     overflow-y: auto;
     border: 1px solid #ccc;
   }
@@ -203,16 +275,16 @@ export default defineComponent({
     color: #fff;
   }
 
+  #btn-create {
+    background-color: #49CC8E;
+  }
+
   #btn-edit {
     background-color: #FCA130;
   }
 
   #btn-delete {
     background-color: #F93E3E;
-  }
-
-  #radio-select {
-    cursor: pointer;
   }
 
   .selected-row {
