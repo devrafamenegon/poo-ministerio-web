@@ -1,61 +1,47 @@
 <template>
-  <div>
-    <h1>Ministérios</h1>
-    <PresidentesTable :presidentes="presidentes"></PresidentesTable>
+  <div class="presidentes-wrapper">
+    <h1>Presidentes</h1>
+    <PresidentesTable :presidentes="data" @update="getData"></PresidentesTable>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import PresidentesTable from '@/components/PresidentesTable.vue';
+import { api, enpointPresidentes } from '@/services/config/httpClient';
 
 export default defineComponent({
   name: 'PresidentesView',
   components: {
     PresidentesTable,
   },
-  data() {
-    return {
-      presidentes: [
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-      ],
+  setup() {
+    const data = ref([]);
+    const isLoading = ref(true);
+
+    const getData = () => {
+      api.get(enpointPresidentes)
+        .then(response => {
+          data.value = response.data.data;
+          isLoading.value = false;
+        })
+        .catch(error => {
+          console.error('Failed to get data:', error);
+          isLoading.value = false;
+        });
     };
+
+    return { data, isLoading, getData };
   },
+  mounted() {
+    this.getData()
+  }
 });
 </script>
 
 <style scoped>
-/* Estilize a tabela e os botões de acordo com o seu design */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-button {
-  padding: 5px 10px;
-  margin-right: 5px;
-  cursor: pointer;
-}
+  .presidentes-wrapper > h1 {
+    font-weight: 600;
+    font-size: 24px;
+  }
 </style>
