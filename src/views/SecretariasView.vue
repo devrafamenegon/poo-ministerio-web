@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Ministérios</h1>
+  <div class="secretarias-wrapper">
+    <h1>Secretarías</h1>
     <SecretariasTable :secretarias="data" @update="getData"></SecretariasTable>
   </div>
 </template>
@@ -40,25 +40,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f2f2f2;
-  }
-
-  button {
-    padding: 5px 10px;
-    margin-right: 5px;
-    cursor: pointer;
+  .secretarias-wrapper > h1 {
+    font-weight: 600;
+    font-size: 24px;
   }
 </style>
