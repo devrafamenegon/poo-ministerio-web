@@ -8,7 +8,7 @@
           <th>Nome</th>
           <th>Número de Funcionários</th>
           <th>Verba</th>
-          <th>Secretaría ID</th>
+          <th>Ministério ID</th>
         </tr>
       </thead>
       <tbody>
