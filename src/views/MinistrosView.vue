@@ -1,63 +1,47 @@
 <template>
-  <div>
-    <h1>Ministérios</h1>
-    <MinistrosTable :ministros="ministros"></MinistrosTable>
+  <div class="ministros-wrapper">
+    <h1>Ministros</h1>
+    <MinistrosTable :ministros="data" @update="getData"></MinistrosTable>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MinistrosTable from '@/components/MinistrosTable.vue';
+import { api, enpointMinistros } from '@/services/config/httpClient';
 
 export default defineComponent({
   name: 'MinistrosView',
   components: {
     MinistrosTable,
   },
-  data() {
-    return {
-      ministros: [
-        {
-          id: 1,
-          nome: 'Ministério da Saúde',
-          numFuncionarios: 500,
-          verba: 1000000,
-        },
-        {
-          id: 2,
-          nome: 'Ministério da Educação',
-          numFuncionarios: 300,
-          verba: 800000,
-        },
-      ],
+  setup() {
+    const data = ref([]);
+    const isLoading = ref(true);
+
+    const getData = () => {
+      api.get(enpointMinistros)
+        .then(response => {
+          data.value = response.data.data;
+          isLoading.value = false;
+        })
+        .catch(error => {
+          console.error('Failed to get data:', error);
+          isLoading.value = false;
+        });
     };
+
+    return { data, isLoading, getData };
   },
+  mounted() {
+    this.getData()
+  }
 });
 </script>
 
 <style scoped>
-/* Estilize a tabela e os botões de acordo com o seu design */
-table {
-  width: 100%;
-  max-height: 400px;
-  border-collapse: collapse;
-  margin-top: 20px;
-  overflow-y: auto;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-button {
-  padding: 5px 10px;
-  margin-right: 5px;
-  cursor: pointer;
-}
+  .ministros-wrapper > h1 {
+    font-weight: 600;
+    font-size: 24px;
+  }
 </style>
